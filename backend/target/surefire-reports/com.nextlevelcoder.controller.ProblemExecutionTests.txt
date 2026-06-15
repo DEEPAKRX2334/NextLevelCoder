@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.nextlevelcoder.controller.ProblemExecutionTests
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.621 s -- in com.nextlevelcoder.controller.ProblemExecutionTests
