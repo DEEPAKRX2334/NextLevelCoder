@@ -1,0 +1,4 @@
+com\nextlevelcoder\service\NoteServiceTests.class
+com\nextlevelcoder\NextLevelCoderApplicationTests.class
+com\nextlevelcoder\service\GoalServiceTests.class
+com\nextlevelcoder\util\CodeSanitizerTests.class

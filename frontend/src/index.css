@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  /* Default Slate Theme variables - Redefined to premium light lavender mockup */
+  --bg-app: #e2ddf7;
+  --bg-card: #ffffff;
+  --border-app: rgba(138, 63, 252, 0.16);
+  --border-light: rgba(138, 63, 252, 0.1);
+  --text-app: #1e1b4b;
+  --text-muted: #6b7280;
+  --primary-color: #8a3ffc;
+  --primary-hover: #7c3aed;
+  --primary-glow: rgba(138, 63, 252, 0.1);
+
+  --code-bg: #f8f7ff;
+  --code-text: #6d28d9;
+  --code-border: #ddd6fe;
+
+  /* Typography Scales */
+  --font-scale: 1.0;
+  --line-height-scale: 1.5;
+}
+
+.theme-slate {
+  --bg-app: #e2ddf7;
+  --bg-card: #ffffff;
+  --border-app: rgba(138, 63, 252, 0.16);
+  --border-light: rgba(138, 63, 252, 0.1);
+  --text-app: #1e1b4b;
+  --text-muted: #6b7280;
+  --primary-color: #8a3ffc;
+  --primary-hover: #7c3aed;
+  --primary-glow: rgba(138, 63, 252, 0.1);
+
+  --code-bg: #f8f7ff;
+  --code-text: #6d28d9;
+  --code-border: #ddd6fe;
+}
+
+.theme-dark {
+  --bg-app: #090d16;
+  --bg-card: #0f172a;
+  --border-app: #1e293b;
+  --border-light: #334155;
+  --text-app: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.15);
+
+  --code-bg: #040815;
+  --code-text: #a5b4fc;
+  --code-border: #1e293b;
+}
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  /* Overriding standard slate values to reference variables */
+  --color-slate-950: var(--bg-app);
+  --color-slate-900: var(--bg-card);
+  --color-slate-800: var(--border-app);
+  --color-slate-700: var(--border-light);
+  --color-slate-650: var(--border-light);
+  --color-slate-600: var(--border-light);
+  --color-slate-500: var(--text-muted);
+  --color-slate-400: var(--text-muted);
+  --color-slate-350: var(--text-muted);
+  --color-slate-300: var(--text-app);
+  --color-slate-200: var(--text-app);
+  --color-slate-100: var(--text-app);
+
+  --color-indigo-600: var(--primary-color);
+  --color-indigo-500: var(--primary-hover);
+  --color-indigo-400: var(--primary-hover);
+
+  /* Premium colored shadows to make cards pop */
+  --shadow-sm: 0 2px 8px rgba(138, 63, 252, 0.04), 0 1px 3px rgba(138, 63, 252, 0.02);
+  --shadow-md: 0 4px 16px rgba(138, 63, 252, 0.06), 0 2px 6px rgba(138, 63, 252, 0.03);
+  --shadow-lg: 0 10px 32px rgba(138, 63, 252, 0.08), 0 4px 12px rgba(138, 63, 252, 0.04);
+  --shadow-xl: 0 20px 48px rgba(138, 63, 252, 0.12), 0 8px 20px rgba(138, 63, 252, 0.06);
+  --shadow-2xl: 0 32px 64px rgba(138, 63, 252, 0.16), 0 12px 32px rgba(138, 63, 252, 0.08);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: calc(16px * var(--font-scale));
+  line-height: var(--line-height-scale);
+  background-color: var(--bg-app) !important;
+  color: var(--text-app) !important;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Dynamic Description Container typography overrides */
+.description-container p,
+.description-container li {
+  font-size: calc(15px * var(--font-scale)) !important;
+  line-height: var(--line-height-scale) !important;
+  margin-bottom: 0.75rem;
+  color: var(--text-app) !important;
+}
+
+.description-container h1 {
+  font-size: calc(24px * var(--font-scale)) !important;
+  font-weight: 800;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-app) !important;
+}
+
+.description-container h2 {
+  font-size: calc(20px * var(--font-scale)) !important;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-app) !important;
+  padding-bottom: 0.375rem;
+  color: var(--text-app) !important;
+}
+
+.description-container h3 {
+  font-size: calc(16px * var(--font-scale)) !important;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  border-left: 2.5px solid var(--primary-color) !important;
+  padding-left: 0.75rem;
+  color: var(--text-app) !important;
+}
+
+/* High contrast inline code symbol highlight styling */
+code {
+  font-family: var(--editor-font-family, 'Fira Code', 'JetBrains Mono', monospace) !important;
+  font-size: calc(13px * var(--font-scale)) !important;
+  background-color: var(--code-bg, #040815) !important;
+  color: var(--code-text, #a5b4fc) !important;
+  border: 1px solid var(--code-border, #1e293b) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+/* Custom Print layout for Certificates */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .fixed.inset-0, .fixed.inset-0 * {
+    visibility: visible;
+  }
+  .fixed.inset-0 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: white !important;
+  }
+}
+
+/* Custom shake animation keyframe for quiz feedback validation */
+@keyframes nlc-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.animate-shake {
+  animation: nlc-shake 0.35s ease-in-out;
+}
+
+/* Custom slide-in animation keyframe for toast alerts */
+@keyframes nlc-slide-in {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.animate-slide-in {
+  animation: nlc-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom confetti falling animation */
+@keyframes nlc-confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(720deg) translateX(var(--drift-x, 50px));
+    opacity: 0;
+  }
+}
+
+
