@@ -7,9 +7,13 @@ class CodeSanitizerTests {
 
     @Test
     void testSafeJavaCode() {
-        String code = "public class Solution {\n" +
-                      "    public int add(int a, int b) {\n" +
-                      "        return a + b;\n" +
+        String code = "import java.io.BufferedReader;\n" +
+                      "import java.io.InputStreamReader;\n" +
+                      "import java.util.Scanner;\n" +
+                      "public class Solution {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        Scanner sc = new Scanner(System.in);\n" +
+                      "        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n" +
                       "    }\n" +
                       "}";
         assertNull(CodeSanitizer.checkSecurity(code, "Java"));
@@ -17,15 +21,24 @@ class CodeSanitizerTests {
 
     @Test
     void testUnsafeJavaCode() {
-        String code = "import java.io.File;\n" +
-                      "public class Solution {\n" +
-                      "    public void hack() {\n" +
-                      "        System.exit(0);\n" +
-                      "    }\n" +
-                      "}";
-        String result = CodeSanitizer.checkSecurity(code, "Java");
-        assertNotNull(result);
-        assertTrue(result.contains("Security Rejection"));
+        String code1 = "import java.io.BufferedReader;\n" +
+                       "public class Solution {\n" +
+                       "    public void hack() {\n" +
+                       "        System.exit(0);\n" +
+                       "    }\n" +
+                       "}";
+        String result1 = CodeSanitizer.checkSecurity(code1, "Java");
+        assertNotNull(result1);
+        assertTrue(result1.contains("Security Rejection"));
+
+        String code2 = "public class Solution {\n" +
+                       "    public void hack() {\n" +
+                       "        ProcessBuilder pb = new ProcessBuilder(\"ls\");\n" +
+                       "    }\n" +
+                       "}";
+        String result2 = CodeSanitizer.checkSecurity(code2, "Java");
+        assertNotNull(result2);
+        assertTrue(result2.contains("Security Rejection"));
     }
 
     @Test
@@ -42,19 +55,22 @@ class CodeSanitizerTests {
 
     @Test
     void testSafePythonCode() {
-        String code = "def add(a, b):\n" +
-                      "    return a + b\n";
+        String code = "import sys\n" +
+                      "lines = sys.stdin.read()\n" +
+                      "sys.stdout.write(lines.upper())\n";
         assertNull(CodeSanitizer.checkSecurity(code, "Python"));
     }
 
     @Test
     void testUnsafePythonCode() {
-        String code = "import os\n" +
-                      "def hack():\n" +
-                      "    os.system('ls')\n";
-        String result = CodeSanitizer.checkSecurity(code, "Python");
-        assertNotNull(result);
-        assertTrue(result.contains("Security Rejection"));
+        String code1 = "import os\nos.system('ls')\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code1, "Python"));
+
+        String code2 = "import subprocess\nsubprocess.run(['ls'])\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code2, "Python"));
+
+        String code3 = "eval('1 + 1')\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code3, "Python"));
     }
 
     @Test
@@ -67,19 +83,22 @@ class CodeSanitizerTests {
 
     @Test
     void testSafeJavaScriptCode() {
-        String code = "function add(a, b) {\n" +
-                      "    return a + b;\n" +
-                      "}\n";
+        String code = "const fs = require('fs');\n" +
+                      "const input = fs.readFileSync(0, 'utf-8');\n" +
+                      "console.log(input.toUpperCase());\n";
         assertNull(CodeSanitizer.checkSecurity(code, "JavaScript"));
     }
 
     @Test
     void testUnsafeJavaScriptCode() {
-        String code = "const fs = require('fs');\n" +
-                      "eval('console.log(1)');\n";
-        String result = CodeSanitizer.checkSecurity(code, "JavaScript");
-        assertNotNull(result);
-        assertTrue(result.contains("Security Rejection"));
+        String code1 = "const { exec } = require('child_process');\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code1, "JavaScript"));
+
+        String code2 = "eval('1 + 1');\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code2, "JavaScript"));
+
+        String code3 = "const spawn = require('child_process').spawn;\n";
+        assertNotNull(CodeSanitizer.checkSecurity(code3, "JavaScript"));
     }
 
     @Test

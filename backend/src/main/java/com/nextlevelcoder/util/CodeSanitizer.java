@@ -6,7 +6,6 @@ import java.util.List;
 public class CodeSanitizer {
 
     private static final List<Pattern> JAVA_BLACKLIST = List.of(
-        Pattern.compile("\\bjava\\.io\\b"),
         Pattern.compile("\\bjava\\.nio\\b"),
         Pattern.compile("\\bjava\\.lang\\.reflect\\b"),
         Pattern.compile("\\bClassLoader\\b"),
@@ -23,7 +22,6 @@ public class CodeSanitizer {
 
     private static final List<Pattern> PYTHON_BLACKLIST = List.of(
         Pattern.compile("\\bos\\b"),
-        Pattern.compile("\\bsys\\b"),
         Pattern.compile("\\bsubprocess\\b"),
         Pattern.compile("\\bshutil\\b"),
         Pattern.compile("\\bimportlib\\b"),
@@ -40,9 +38,6 @@ public class CodeSanitizer {
 
     private static final List<Pattern> JS_BLACKLIST = List.of(
         Pattern.compile("\\bchild_process\\b"),
-        Pattern.compile("\\bfs\\b"),
-        Pattern.compile("\\bprocess\\b"),
-        Pattern.compile("\\brequire\\b"),
         Pattern.compile("\\bimport\\b"),
         Pattern.compile("\\beval\\b"),
         Pattern.compile("\\bFunction\\b"),
@@ -52,7 +47,10 @@ public class CodeSanitizer {
         Pattern.compile("\\bcluster\\b"),
         Pattern.compile("\\bnet\\b"),
         Pattern.compile("\\bhttp\\b"),
-        Pattern.compile("\\bhttps\\b")
+        Pattern.compile("\\bhttps\\b"),
+        Pattern.compile("\\bexec\\b"),
+        Pattern.compile("\\bspawn\\b"),
+        Pattern.compile("\\bfork\\b")
     );
 
     public static String checkSecurity(String code, String language) {
