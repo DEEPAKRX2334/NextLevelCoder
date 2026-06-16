@@ -26,6 +26,8 @@ import {
   Key,
   Link2,
   Bookmark,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 const DEFAULT_PYTHON_TEMPLATE = `import sys
 
@@ -129,6 +131,17 @@ const Workspace: React.FC = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [loading, setLoading] = useState(true);
   const [leftTab, setLeftTab] = useState<'description' | 'schema'>('description');
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleToggleBookmark = async () => {
     if (!problem) return;
@@ -627,24 +640,25 @@ const Workspace: React.FC = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col gap-4 w-full">
+    <div className="h-auto min-h-[calc(100vh-6rem)] md:h-[calc(100vh-6rem)] flex flex-col gap-4 w-full overflow-y-auto md:overflow-hidden pb-4 md:pb-0">
       {showConfetti && <Confetti />}
+      
       {/* Header Bar */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/problems')}
-            className="p-1.5 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition-colors"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <div>
-            <h1 className="text-lg font-bold text-white flex items-center gap-2">
-              {problem.title}
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-2 border-b border-slate-800 gap-3">
+        <div className="flex items-center justify-between md:justify-start gap-2 w-full md:w-auto">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/problems')}
+              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition-colors flex-shrink-0"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <h1 className="text-sm md:text-lg font-bold text-white flex items-center gap-1.5 flex-wrap">
+              <span className="truncate max-w-[140px] xs:max-w-[180px] sm:max-w-none">{problem.title}</span>
               <button
                 onClick={handleToggleBookmark}
                 title={bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
-                className={`p-1.5 rounded-lg transition-all border flex items-center justify-center cursor-pointer ${
+                className={`p-1.5 rounded-lg transition-all border flex items-center justify-center cursor-pointer flex-shrink-0 ${
                   bookmarked
                     ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
                     : 'bg-slate-950/40 border-slate-800 text-slate-500 hover:text-slate-300 hover:bg-slate-800'
@@ -652,7 +666,7 @@ const Workspace: React.FC = () => {
               >
                 <Bookmark size={13} fill={bookmarked ? "currentColor" : "none"} />
               </button>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase ${
+              <span className={`text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded border uppercase flex-shrink-0 ${
                 problem.difficulty === 'Easy' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
                 problem.difficulty === 'Medium' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
                 'bg-rose-500/10 border-rose-500/20 text-rose-400'
@@ -664,7 +678,7 @@ const Workspace: React.FC = () => {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
           {language === 'sql' ? (
             <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
               <span className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
@@ -680,10 +694,10 @@ const Workspace: React.FC = () => {
               </span>
             </div>
           ) : (
-            <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+            <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-0.5 flex-1 md:flex-none justify-around md:justify-start">
               <button
                 onClick={() => handleLanguageChange('javascript')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-semibold transition-all flex-1 md:flex-none text-center ${
                   language === 'javascript' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -691,7 +705,7 @@ const Workspace: React.FC = () => {
               </button>
               <button
                 onClick={() => handleLanguageChange('java')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-semibold transition-all flex-1 md:flex-none text-center ${
                   language === 'java' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -699,7 +713,7 @@ const Workspace: React.FC = () => {
               </button>
               <button
                 onClick={() => handleLanguageChange('python')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-semibold transition-all flex-1 md:flex-none text-center ${
                   language === 'python' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -711,7 +725,7 @@ const Workspace: React.FC = () => {
           <button
             onClick={handleReset}
             title="Reset code"
-            className="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-xl transition-colors"
+            className="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-xl transition-colors flex-shrink-0"
           >
             <RotateCcw size={14} />
           </button>
@@ -722,62 +736,83 @@ const Workspace: React.FC = () => {
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 min-h-0">
         
         {/* Left Side: Problem Details & Database Schema */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col h-full min-h-0">
-          {!!problem.schemaSql && (
-            <div className="flex border-b border-slate-800 gap-4 mb-4 flex-shrink-0">
-              <button
-                onClick={() => setLeftTab('description')}
-                className={`pb-2 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-px ${
-                  leftTab === 'description'
-                    ? 'border-indigo-500 text-white'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                Description
-              </button>
-              <button
-                onClick={() => setLeftTab('schema')}
-                className={`pb-2 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-px ${
-                  leftTab === 'schema'
-                    ? 'border-indigo-500 text-white'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                Database Schema
-              </button>
-            </div>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col h-auto md:h-full min-h-0 order-2 md:order-1">
+          {isMobile && (
+            <button
+              onClick={() => setIsDescriptionCollapsed(!isDescriptionCollapsed)}
+              className="w-full flex items-center justify-between text-slate-300 hover:text-white font-bold text-sm transition-all focus:outline-none"
+            >
+              <span className="flex items-center gap-2">
+                <Code2 size={16} className="text-indigo-400" />
+                Problem Description
+              </span>
+              <span className="flex items-center gap-1.5 text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-1 rounded-lg">
+                {isDescriptionCollapsed ? 'Show Description' : 'Hide Description'}
+                {isDescriptionCollapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+              </span>
+            </button>
           )}
 
-          {(!problem.schemaSql || leftTab === 'description') ? (
-            <div className="flex-1 overflow-y-auto space-y-5 min-h-0">
-              <div>
-                <h2 className="text-sm font-semibold uppercase text-slate-500 tracking-wider">Description</h2>
-                <div className="text-slate-300 mt-2 description-container">
-                  {renderMarkdown(problem.description)}
-                </div>
-              </div>
-
-              {problem.constraints && (
-                <div>
-                  <h2 className="text-sm font-semibold uppercase text-slate-500 tracking-wider">Constraints</h2>
-                  <div className="text-slate-400 mt-2 description-container">
-                    {renderMarkdown(problem.constraints)}
-                  </div>
+          {(!isMobile || !isDescriptionCollapsed) && (
+            <div className={`flex-1 flex flex-col min-h-0 ${isMobile ? 'mt-4 border-t border-slate-800/60 pt-4' : ''}`}>
+              {/* Tab selector for schema / description */}
+              {!!problem.schemaSql && (
+                <div className="flex border-b border-slate-800 gap-4 mb-4 flex-shrink-0">
+                  <button
+                    onClick={() => setLeftTab('description')}
+                    className={`pb-2 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-px ${
+                      leftTab === 'description'
+                        ? 'border-indigo-500 text-white'
+                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    Description
+                  </button>
+                  <button
+                    onClick={() => setLeftTab('schema')}
+                    className={`pb-2 text-xs font-bold uppercase tracking-wider transition-all border-b-2 -mb-px ${
+                      leftTab === 'schema'
+                        ? 'border-indigo-500 text-white'
+                        : 'border-transparent text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    Database Schema
+                  </button>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="flex-1 overflow-y-auto min-h-0">
-              {renderSchemaDiagram(problem.schemaSql)}
+
+              {(!problem.schemaSql || leftTab === 'description') ? (
+                <div className="flex-1 md:overflow-y-auto space-y-5 min-h-0">
+                  <div>
+                    <h2 className="text-sm font-semibold uppercase text-slate-500 tracking-wider">Description</h2>
+                    <div className="text-slate-300 mt-2 description-container">
+                      {renderMarkdown(problem.description)}
+                    </div>
+                  </div>
+
+                  {problem.constraints && (
+                    <div>
+                      <h2 className="text-sm font-semibold uppercase text-slate-500 tracking-wider">Constraints</h2>
+                      <div className="text-slate-400 mt-2 description-container">
+                        {renderMarkdown(problem.constraints)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-1 md:overflow-y-auto min-h-0">
+                  {renderSchemaDiagram(problem.schemaSql)}
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* Right Side: Code Editor & Results */}
-        <div className="flex flex-col gap-4 min-h-0 h-full">
+        <div className="flex flex-col gap-4 min-h-0 h-auto md:h-full order-1 md:order-2">
           
           {/* Editor Container */}
-          <div className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col min-h-0">
+          <div className="flex-grow bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col min-h-0 h-[380px] md:h-auto">
             <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/60 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <Code2 size={14} className="text-indigo-400" />
@@ -793,7 +828,7 @@ const Workspace: React.FC = () => {
               </button>
             </div>
             
-            <div className="flex-1 relative overflow-hidden">
+            <div className="flex-grow relative overflow-hidden">
               <Editor
                 height="100%"
                 language={language === 'sql' ? 'sql' : language === 'java' ? 'java' : language === 'html' ? 'html' : language === 'python' ? 'python' : 'javascript'}
@@ -832,12 +867,12 @@ const Workspace: React.FC = () => {
 
           {/* Action Footer & Results Panel */}
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex-shrink-0 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-2">
+              <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 flex-nowrap sm:flex-wrap">
                 {language === 'html' && (
                   <button
                     onClick={() => setConsoleTab('preview')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all flex-shrink-0 ${
                       consoleTab === 'preview'
                         ? 'bg-slate-800 border-slate-700 text-white'
                         : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -850,7 +885,7 @@ const Workspace: React.FC = () => {
                 {language !== 'sql' && language !== 'html' && (
                   <button
                     onClick={() => setConsoleTab('input')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all flex-shrink-0 ${
                       consoleTab === 'input'
                         ? 'bg-slate-800 border-slate-700 text-white'
                         : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -862,7 +897,7 @@ const Workspace: React.FC = () => {
                 )}
                 <button
                   onClick={() => setConsoleTab('output')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all flex-shrink-0 ${
                     consoleTab === 'output'
                       ? 'bg-slate-800 border-slate-700 text-white'
                       : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -873,12 +908,12 @@ const Workspace: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-end w-full sm:w-auto">
                 {/* Run code button */}
                 <button
                   onClick={handleRun}
                   disabled={runningCode || submitting}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 disabled:bg-slate-900 disabled:border-slate-800 disabled:text-slate-600 text-slate-200 text-xs font-semibold rounded-xl transition-all"
+                  className="flex items-center justify-center gap-1.5 px-3 md:px-4 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 disabled:bg-slate-900 disabled:border-slate-800 disabled:text-slate-600 text-slate-200 text-xs font-semibold rounded-xl transition-all flex-1 sm:flex-none"
                 >
                   {runningCode ? (
                     <span className="w-3.5 h-3.5 border-2 border-slate-400 border-t-white rounded-full animate-spin" />
@@ -894,7 +929,7 @@ const Workspace: React.FC = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={runningCode || submitting}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-indigo-500/15"
+                  className="flex items-center justify-center gap-1.5 px-3 md:px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-indigo-500/15 flex-1 sm:flex-none"
                 >
                   {submitting ? (
                     <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
