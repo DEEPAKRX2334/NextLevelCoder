@@ -14,6 +14,13 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
+# Install Python and Node.js runtimes
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python-is-python3 \
+    nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy compiled jar from build stage
 COPY --from=build /app/target/*.jar app.jar
 
